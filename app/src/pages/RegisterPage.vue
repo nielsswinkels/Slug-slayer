@@ -1,0 +1,251 @@
+<template>
+  <q-page class="column" >
+    <div class="col row justify-center items-center content-center">
+      <h1 class="col-md-6 col-xs-11">
+        Registrera konto
+      </h1>
+      <div class="flex-break"></div>
+      <div class="col-md-6 col-xs-11 column items-start q-gutter-md no-wrap">
+        <q-input
+          ref="emailRef"
+          class="col"
+          autocomplete="on"
+          v-model="email"
+          filled
+          type="email"
+          label="E-post"
+          lazy-rules
+          :rules="[ testPattern.email ]"
+        ></q-input>
+        <q-input
+          ref="passwordRef"
+          class="col"
+          autocomplete="on"
+          v-model="password"
+          filled
+          type="password"
+          label="Lösenord"
+          lazy-rules
+          :rules="[
+            v => /^.*[0-9].*/.test(v) || 'Lösenordet ska innehålla minst en siffra',
+            v => /^.*[a-öA-Ö].*/.test(v) || 'Lösenordet ska innehålla minst en bokstav',
+            v => v.length >= 10 || 'Lösenordet ska vara minst 10 karakter'
+          ]"
+          @focus="this.showPasswordTooltip = true"
+          @blur="this.showPasswordTooltip = false"
+        >
+            <q-tooltip
+              v-model="showPasswordTooltip"
+              anchor="center right"
+              self="center left"
+              :offset="[10, 10]"
+              class="text-subtitle1"
+            >
+              Lösenordskrav:
+              <ul>
+                <li>Minst en siffra</li>
+                <li>Minst en bokstav</li>
+                <li>Minst 10 karakter</li>
+              </ul>
+            </q-tooltip>
+          </q-input>
+          <q-expansion-item
+            class="col bg-grey-2"
+            icon="info"
+            label="Vilkoren"
+            v-model="showTerms"
+          >
+            <q-list
+              bordered
+              class="q-pa-md bg-white text-body1"
+            >
+              <q-item-label>
+                Vem tillhandahåller denna tjänst?
+              </q-item-label>
+              <q-item>
+                <p>
+                  Tjänsten är framtagen av RISE Research Institutes of Sweden AB ("RISE", "Vi") inom ett forskningsprojekt i samarbete med Rörstrand museum. RISE hanterar tjänsten.
+                </p>
+              </q-item>
+              <q-item-label>
+                Vilken data sparas?
+              </q-item-label>
+              <q-item>
+                <p>
+                  För varje användarkonto sparas epost-adress. Lösenordet sparas krypterad. När du väljer att ladda upp data sparas det som du fyller i.
+                </p>
+              </q-item>
+              <q-item-label>
+                Hur används datan?
+              </q-item-label>
+              <q-item>
+                <p>
+                  Bilderna och information som du skickar in används för att träna AI-modeller som ska kunna känna igen Rörstrandsporslin.
+                </p>
+              </q-item>
+              <q-item-label>
+                Hur kan jag få min data raderad?
+              </q-item-label>
+              <q-item>
+                <p>
+                    Kontakta oss på&nbsp;<a style="display:inline;" href="mailto:rorstrand-ai@betaversion.se">rorstrand-ai@betaversion.se</a>&nbsp;för att radera din data.
+                  </p>
+              </q-item>
+              <q-item-label>
+                Regler för innehållsuppladdning
+              </q-item-label>
+              <q-item>
+                <p>
+                  Du får endast ladda upp bilder av Rörstrandsporslin på denna webbplats. Allt annat innehåll, inklusive men inte begränsat till bilder, texter, videor och ljudfiler som inte direkt relaterar till Rörstrandsporslin, är strikt förbjudet. Om sådant innehåll upptäcks kan det komma att raderas utan förvarning. Vid upprepade eller allvarliga överträdelser av denna regel kan användarens konto komma att avstängas permanent, utan att användaren meddelas i förväg. Genom att skapa ett konto och använda denna webbplats, godkänner du dessa villkor.
+                </p>
+              </q-item>
+              <q-item-label>
+                Avslutning av konto
+              </q-item-label>
+              <q-item>
+                <p>
+                  Vi kan besluta att avsluta och radera ett konto och/eller all data uppladdad genom ett konto utan förvarning, meddelande eller förklarande anledning.
+                </p>
+              </q-item>
+              <q-item-label>
+                Kontakt
+              </q-item-label>
+              <q-item>
+                <p>
+                  Kontakta oss på&nbsp;<a href="mailto:rorstrand-ai@betaversion.se">rorstrand-ai@betaversion.se</a>.
+                </p>
+              </q-item>
+              <q-item>
+                  <q-btn
+                    class="col rorstrand-button"
+                    text-color="primary"
+                    label="Stäng vilkoren"
+                    @click="this.showTerms = false"
+                    flat
+                    no-caps
+                  />
+              </q-item>
+            </q-list>
+          </q-expansion-item>
+          <q-checkbox
+            class="col"
+            v-model="termsAccepted"
+            label="Jag har läst och godkänner villkoren."
+            size="sm"
+          />
+        <q-spinner-hourglass
+          class="col"
+          v-if="this.signupLoading"
+          size="lg"></q-spinner-hourglass>
+        <q-btn
+          class="col rorstrand-button rorstrand-button-primary"
+          label="Registrera"
+          @click="signUp"
+          color="primary"
+          no-caps
+        />
+        <q-btn
+          class="col rorstrand-button"
+          text-color="primary"
+          label="Logga in"
+          to="/login"
+          flat
+          no-caps
+        />
+        <q-banner class="col bg-warning text-body1" v-if="this.signupWarning">
+          Du kan inte registrera än. {{ this.signupWarning }}
+          <template v-slot:action>
+            <q-btn flat label="Stäng" @click="this.signupWarning = null" no-caps />
+          </template>
+        </q-banner>
+        <q-banner
+          class="col bg-negative text-white"
+          v-if="this.errorMessage">
+          {{ this.errorMessage }}
+          <template v-slot:action>
+            <q-btn flat color="white" label="Stäng" @click="this.errorMessage=''" no-caps />
+          </template>
+        </q-banner>
+      </div>
+    </div>
+
+  </q-page>
+</template>
+
+<script>
+import parseUtil from 'src/js/parseUtil'
+import { ref } from 'vue'
+
+export default {
+  name: 'PageIndex',
+
+  components: {
+  },
+
+  computed: {
+    // ...mapState(['photos', 'response', 'hasError', 'errorMsg']),
+  },
+  methods: {
+    async signUp () {
+      this.signupLoading = true
+      if (!this.emailRef.validate()) {
+        console.log('Invalid email')
+        this.signupWarning = 'Vänligen fyll i en korrekt epost-adress.'
+        this.signupLoading = false
+        return
+      }
+      if (!this.passwordRef.validate()) {
+        console.log('Invalid password')
+        this.signupWarning = 'Vänligen fyll i ett bra lösenord.'
+        this.signupLoading = false
+        return
+      }
+      if (!this.termsAccepted) {
+        console.log('Terms not accepted')
+        this.signupWarning = 'Vänligen läs och godkänn vilkoren.'
+        this.signupLoading = false
+        return
+      }
+      const registerSuccess = await parseUtil.signUp(this.email, this.password, this.termsAccepted)
+      this.signupLoading = false
+      console.log(registerSuccess)
+      if (registerSuccess.success) {
+        this.$router.push('/login')
+      } else {
+        this.errorMessage = 'Ursäkta, men någonting gick fel med att skapa ett konto. Gärna försök en gång till eller ta kontakt med oss. Felkod: ' + registerSuccess.error?.message
+      }
+    }
+  },
+  setup () {
+    const emailRef = ref(null)
+    const passwordRef = ref(null)
+    return {
+      email: ref(''),
+      password: ref(''),
+      termsAccepted: ref(false),
+      testPattern: {
+        // eslint-disable-next-line
+        email: v => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'Vänligen dubbelkolla din e-post',
+      },
+      signupLoading: ref(false),
+      errorMessage: ref(''),
+      signupWarning: ref(''),
+      emailRef,
+      passwordRef,
+      showTerms: ref(false),
+      showPasswordTooltip: ref(false)
+    }
+  },
+  mounted () {
+    if (this.$route.params.email) {
+      this.email = this.$route.params.email
+    }
+  }
+}
+</script>
+
+<style scoped>
+.q-item__label {
+  font-weight: bold;
+}
+</style>
