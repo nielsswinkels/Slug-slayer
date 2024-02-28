@@ -38,7 +38,8 @@ export default route(function (/* { store, ssrContext } */) {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
     const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
     const currentUser = Parse.User.current()
-    // console.log('CurrentUser: ' + currentUser)
+    console.log('Router checking CurrentUser: ', currentUser)
+    console.log('Router to.path', to.path)
 
     if (requiresAdmin && !currentUser?.get('isAdmin')) {
       next('/login')
