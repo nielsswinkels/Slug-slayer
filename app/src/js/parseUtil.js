@@ -4,10 +4,10 @@ import parse from 'parse'
 // import Store from 'src/store'
 // import { Store } from 'src/store/index'
 
-export async function signUp (email, password, termsAccepted) {
+export async function signUp (email, username, password, termsAccepted) {
   // Create a new instance of the user class
   const user = new parse.User()
-  user.set('username', email)
+  user.set('username', username)
   user.set('password', password)
   user.set('email', email)
   user.set('termsAccepted', termsAccepted)

@@ -18,6 +18,19 @@
           :rules="[ testPattern.email ]"
         ></q-input>
         <q-input
+          ref="usernameRef"
+          class="col"
+          autocomplete="on"
+          v-model="username"
+          filled
+          type=""
+          label="Användarnamn"
+          lazy-rules
+          :rules="[
+            v => v.length >= 1 || 'Användarnamnet ska vara minst 1 karakter'
+          ]"
+        ></q-input>
+        <q-input
           ref="passwordRef"
           class="col"
           autocomplete="on"
@@ -64,7 +77,7 @@
               </q-item-label>
               <q-item>
                 <p>
-                  Fylla i dina mördarsniglarmordsantal på heder och vetemjöl.
+                  Fylla i dina mördarsniglarmordsantal på heder och samvetemjöl.
                 </p>
               </q-item>
               <q-item-label>
@@ -154,6 +167,12 @@ export default {
         this.signupLoading = false
         return
       }
+      if (!this.usernameRef.validate()) {
+        console.log('Invalid username')
+        this.signupWarning = 'Vänligen fyll i en korrekt användarnamn.'
+        this.signupLoading = false
+        return
+      }
       if (!this.passwordRef.validate()) {
         console.log('Invalid password')
         this.signupWarning = 'Vänligen fyll i ett bra lösenord.'
@@ -166,7 +185,7 @@ export default {
         this.signupLoading = false
         return
       }
-      const registerSuccess = await parseUtil.signUp(this.email, this.password, this.termsAccepted)
+      const registerSuccess = await parseUtil.signUp(this.email, this.username, this.password, this.termsAccepted)
       this.signupLoading = false
       console.log(registerSuccess)
       if (registerSuccess.success) {
@@ -178,6 +197,7 @@ export default {
   },
   setup () {
     const emailRef = ref(null)
+    const usernameRef = ref(null)
     const passwordRef = ref(null)
     return {
       email: ref(''),
@@ -191,6 +211,7 @@ export default {
       errorMessage: ref(''),
       signupWarning: ref(''),
       emailRef,
+      usernameRef,
       passwordRef,
       showTerms: ref(false),
       showPasswordTooltip: ref(false)
