@@ -60,51 +60,11 @@
               class="q-pa-md bg-white text-body1"
             >
               <q-item-label>
-                Vem tillhandahåller denna tjänst?
+                Genom att registrera ett konto här lovar du att:
               </q-item-label>
               <q-item>
                 <p>
-                  Tjänsten är framtagen av RISE Research Institutes of Sweden AB ("RISE", "Vi") inom ett forskningsprojekt i samarbete med Rörstrand museum. RISE hanterar tjänsten.
-                </p>
-              </q-item>
-              <q-item-label>
-                Vilken data sparas?
-              </q-item-label>
-              <q-item>
-                <p>
-                  För varje användarkonto sparas epost-adress. Lösenordet sparas krypterad. När du väljer att ladda upp data sparas det som du fyller i.
-                </p>
-              </q-item>
-              <q-item-label>
-                Hur används datan?
-              </q-item-label>
-              <q-item>
-                <p>
-                  Bilderna och information som du skickar in används för att träna AI-modeller som ska kunna känna igen Rörstrandsporslin.
-                </p>
-              </q-item>
-              <q-item-label>
-                Hur kan jag få min data raderad?
-              </q-item-label>
-              <q-item>
-                <p>
-                    Kontakta oss på&nbsp;<a style="display:inline;" href="mailto:rorstrand-ai@betaversion.se">rorstrand-ai@betaversion.se</a>&nbsp;för att radera din data.
-                  </p>
-              </q-item>
-              <q-item-label>
-                Regler för innehållsuppladdning
-              </q-item-label>
-              <q-item>
-                <p>
-                  Du får endast ladda upp bilder av Rörstrandsporslin på denna webbplats. Allt annat innehåll, inklusive men inte begränsat till bilder, texter, videor och ljudfiler som inte direkt relaterar till Rörstrandsporslin, är strikt förbjudet. Om sådant innehåll upptäcks kan det komma att raderas utan förvarning. Vid upprepade eller allvarliga överträdelser av denna regel kan användarens konto komma att avstängas permanent, utan att användaren meddelas i förväg. Genom att skapa ett konto och använda denna webbplats, godkänner du dessa villkor.
-                </p>
-              </q-item>
-              <q-item-label>
-                Avslutning av konto
-              </q-item-label>
-              <q-item>
-                <p>
-                  Vi kan besluta att avsluta och radera ett konto och/eller all data uppladdad genom ett konto utan förvarning, meddelande eller förklarande anledning.
+                  Fylla i dina mördarsniglarmordsantal på heder och vetemjöl.
                 </p>
               </q-item>
               <q-item-label>
@@ -112,12 +72,12 @@
               </q-item-label>
               <q-item>
                 <p>
-                  Kontakta oss på&nbsp;<a href="mailto:rorstrand-ai@betaversion.se">rorstrand-ai@betaversion.se</a>.
+                  Kontakta oss på&nbsp;<a href="mailto:snigelkampen@nielsswinkels.nl">snigelkampen@nielsswinkels.nl</a>.
                 </p>
               </q-item>
               <q-item>
                   <q-btn
-                    class="col rorstrand-button"
+                    class="col"
                     text-color="primary"
                     label="Stäng vilkoren"
                     @click="this.showTerms = false"
