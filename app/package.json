@@ -2,7 +2,7 @@
   "name": "slug-slayer",
   "version": "0.0.1",
   "description": "Keep track of your slug kill count",
-  "productName": "Slug Slayer",
+  "productName": "Snigelkampen",
   "author": "Niels <niels.sw@gmail.com>",
   "private": true,
   "scripts": {
