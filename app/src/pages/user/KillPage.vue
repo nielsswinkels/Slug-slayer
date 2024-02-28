@@ -81,6 +81,7 @@
 </template>
 
 <script lang="ts">
+import parseUtil from 'src/js/parseUtil'
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -89,6 +90,11 @@ export default defineComponent({
   methods: {
     saveKillCount () {
       console.log('FIXME implement save killcount')
+      const savedKillCount = parseUtil.saveKillCount(new Date(this.date), this.killCount)
+      if (!savedKillCount) {
+        console.error('Did not save the killcount! Now what we do?!')
+      }
+      this.$router.push('/user')
     }
   },
   setup() {

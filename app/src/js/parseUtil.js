@@ -55,9 +55,53 @@ export async function logOut () {
   }
 }
 
+
+
+export async function saveKillCount (date, count) {
+  const killRecord = new parse.Object('KillRecord')
+  const currentUser = parse.User.current()
+  if (!currentUser) {
+    console.error('No user found to save KillRecord.')
+    return null  
+  }
+  killRecord.set('date', date)
+  killRecord.set('count', count)
+  killRecord.set('user', currentUser)
+
+  try {
+    const savedKillRecord = await killRecord.save()
+    console.log('KillRecord has been saved.', savedKillRecord)
+    return savedKillRecord
+  } catch (error) {
+    console.error('Error while saving KillRecord: ', error)
+    return null
+  }
+}
+
+export async function getTotalKillCountForUser (user) {
+  const query = new parse.Query('KillRecord')
+  query.equalTo('user', user)
+  query.limit(1000)
+
+  try {
+    const results = await query.find()
+    let sum = 0;
+    for (let i = 0; i < results.length; i++) {
+        let object = results[i];
+        sum += object.get('count');
+    }
+    return sum
+  } catch (error) {
+    console.error(`Failed to retrieve the object, with error code: ${error.message}`)
+    return 0
+  }
+}
+
 export default {
   signUp,
   resetPassword,
   logIn,
-  logOut
+  logOut,
+  saveKillCount,
+  getTotalKillCountForUser
 }

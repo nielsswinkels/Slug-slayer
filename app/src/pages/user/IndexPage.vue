@@ -1,6 +1,11 @@
 <template>
-  <q-page class="column items-center justify-evenly">
-    hej
+  <q-page class="column items-center justify-start">
+    <div class="text-h6 q-mt-lg">
+      Din kill count: 
+    </div>
+    <div class="text-h1 q-mb-lg">
+      {{ this.personalTotal }}
+    </div>
     <div>
       Du är inloggad som {{ currentUser.get('username') }}
       <q-btn
@@ -30,15 +35,19 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import parse from 'parse'
+import parseUtil from 'src/js/parseUtil'
 
 export default defineComponent({
   name: 'IndexPage',
   components: {  },
   setup() {
-    
     return {
+      personalTotal: ref(0),
       currentUser: ref(parse.User.current())
     };
+  },
+  async mounted () {
+    this.personalTotal = await parseUtil.getTotalKillCountForUser(this.currentUser)
   }
 });
 </script>
