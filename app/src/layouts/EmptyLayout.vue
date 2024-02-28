@@ -5,6 +5,14 @@
         <q-toolbar-title @click="$router.push('/')">
           {{ appName }}
         </q-toolbar-title>
+        <q-btn
+          icon="login"
+          label="Login"
+          to="/login"
+          size="md"
+          flat
+          rounded
+        ></q-btn>
       </q-toolbar>
     </q-header>
 
