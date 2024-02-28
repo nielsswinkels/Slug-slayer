@@ -11,9 +11,10 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title @click="$router.push('/')">
+        <q-toolbar-title @click="$router.push('/user')">
           {{ appName }}
         </q-toolbar-title>
+        {{ currentUser.get('username') }}
       </q-toolbar>
     </q-header>
 
@@ -37,6 +38,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import parse from 'parse'
+
 
 
 export default defineComponent({
@@ -48,7 +51,9 @@ export default defineComponent({
   setup () {
     const leftDrawerOpen = ref(false)
     const appName = process.env.APP_NAME
+    const currentUser = parse.User.current()
     return {
+      currentUser,
       appName,
       leftDrawerOpen,
       toggleLeftDrawer () {
