@@ -4,7 +4,7 @@
 
     <q-btn
       label="Login"
-      to="/user/"
+      to="/login/"
     ></q-btn>
   </q-page>
 </template>

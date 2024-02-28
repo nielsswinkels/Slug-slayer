@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title @click="$router.push('/')">
           {{ appName }}
         </q-toolbar-title>
       </q-toolbar>

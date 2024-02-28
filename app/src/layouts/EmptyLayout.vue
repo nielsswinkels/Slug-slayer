@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title>
+        <q-toolbar-title @click="$router.push('/')">
           {{ appName }}
         </q-toolbar-title>
       </q-toolbar>
