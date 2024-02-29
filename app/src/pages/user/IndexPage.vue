@@ -20,12 +20,20 @@
       />
     </div>
     <div>
+      <h4>Topplistan</h4>
       <q-list>
         <q-item
-          v-for="user in this.allUsers"
+          v-for="(user, index) in allUsers"
           :key="user.id"
         >
-          {{ user.get('username') }}
+          {{ index+1 }}
+          <q-icon
+            name="arrow_right"
+            size="sm"
+            v-if="user.username === currentUser.get('username')"
+          ></q-icon>
+          {{ user.username }}
+          {{ user.killCount }}
         </q-item>
       </q-list>
     </div>
@@ -53,22 +61,30 @@ export default defineComponent({
   components: {  },
   setup() {
     let personalTotal: Ref<null | number> = ref(null)
+    let allUsers: Ref<Array<{id:string, username:string, killCount:number}>> = ref([])
+
     return {
       personalTotal,
-      allUsers: ref([]),
+      allUsers,
       currentUser: ref(parse.User.current())
     };
   },
   async mounted () {
     this.personalTotal = await parseUtil.getTotalKillCountForUser(this.currentUser)
-    // const loadedUsers = await parseUtil.getAllUsers()
-    // for (const user of loadedUsers) {
+    const loadedUsers = await parseUtil.getAllUsers()
+    for (const user of loadedUsers) {
+      console.log(user)
+      console.log(user.get('username'))
+
+      let killCount = await parseUtil.getTotalKillCountForUser(user)
       
-    //   // this.allUsers.push({
-    //   //   id:user.id,
-    //   //   username:user.get('username'),
-    //   // })
-    // }
+      this.allUsers.push({
+        'id':user.id,
+        'username':user.get('username'),
+        'killCount': killCount,
+      })
+    }
+    this.allUsers.sort((a,b) => b.killCount - a.killCount)
   }
 });
 </script>

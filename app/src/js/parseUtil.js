@@ -105,7 +105,7 @@ export async function getAllUsers () {
     return await query.find()
   } catch (error) {
     console.error(`Failed to retrieve the object, with error code: ${error.message}`)
-    return 0
+    return []
   }
 }
 
