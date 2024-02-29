@@ -4,8 +4,8 @@
       Din kill count: 
     </div>
     <div class="text-h1 q-mb-lg">
-      <q-spinner v-if="!doneLoading"></q-spinner>
-      {{ (this.doneLoading?this.personalTotal:'') }}
+      <q-spinner v-if="!personalTotal"></q-spinner>
+      {{ (this.personalTotal?this.personalTotal:'') }}
     </div>
     <div>
       Du är inloggad som {{ currentUser.get('username') }}
@@ -18,6 +18,16 @@
       flat
       no-caps
       />
+    </div>
+    <div>
+      <q-list>
+        <q-item
+          v-for="user in this.allUsers"
+          :key="user.id"
+        >
+          {{ user.get('username') }}
+        </q-item>
+      </q-list>
     </div>
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-btn
@@ -34,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, Ref } from 'vue';
 import parse from 'parse'
 import parseUtil from 'src/js/parseUtil'
 
@@ -42,16 +52,23 @@ export default defineComponent({
   name: 'IndexPage',
   components: {  },
   setup() {
+    let personalTotal: Ref<null | number> = ref(null)
     return {
-      personalTotal: ref(0),
-      doneLoading: ref(false),
+      personalTotal,
+      allUsers: ref([]),
       currentUser: ref(parse.User.current())
     };
   },
   async mounted () {
-    this.doneLoading = false
     this.personalTotal = await parseUtil.getTotalKillCountForUser(this.currentUser)
-    this.doneLoading = true
+    // const loadedUsers = await parseUtil.getAllUsers()
+    // for (const user of loadedUsers) {
+      
+    //   // this.allUsers.push({
+    //   //   id:user.id,
+    //   //   username:user.get('username'),
+    //   // })
+    // }
   }
 });
 </script>

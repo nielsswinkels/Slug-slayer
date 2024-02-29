@@ -97,11 +97,24 @@ export async function getTotalKillCountForUser (user) {
   }
 }
 
+export async function getAllUsers () {
+  const query = new parse.Query('User')
+  query.limit(1000)
+
+  try {
+    return await query.find()
+  } catch (error) {
+    console.error(`Failed to retrieve the object, with error code: ${error.message}`)
+    return 0
+  }
+}
+
 export default {
   signUp,
   resetPassword,
   logIn,
   logOut,
   saveKillCount,
-  getTotalKillCountForUser
+  getTotalKillCountForUser,
+  getAllUsers
 }
