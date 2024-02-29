@@ -4,7 +4,8 @@
       Din kill count: 
     </div>
     <div class="text-h1 q-mb-lg">
-      {{ this.personalTotal }}
+      <q-spinner v-if="!doneLoading"></q-spinner>
+      {{ (this.doneLoading?this.personalTotal:'') }}
     </div>
     <div>
       Du är inloggad som {{ currentUser.get('username') }}
@@ -43,11 +44,14 @@ export default defineComponent({
   setup() {
     return {
       personalTotal: ref(0),
+      doneLoading: ref(false),
       currentUser: ref(parse.User.current())
     };
   },
   async mounted () {
+    this.doneLoading = false
     this.personalTotal = await parseUtil.getTotalKillCountForUser(this.currentUser)
+    this.doneLoading = true
   }
 });
 </script>
