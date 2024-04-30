@@ -8,18 +8,6 @@
       {{ (this.personalTotal?this.personalTotal:'') }}
     </div>
     <div>
-      Du är inloggad som {{ currentUser.get('username') }}
-      <q-btn
-      label="Logga ut"
-      to="/logout"
-      size="md"
-      class="rorstrand-button"
-      text-color="primary"
-      flat
-      no-caps
-      />
-    </div>
-    <div>
       <h4>Toppmördare</h4>
       <q-list>
         <q-item

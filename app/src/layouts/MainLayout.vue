@@ -27,6 +27,21 @@
         >
           Menu
         </q-item>
+        <q-item
+        >
+        <div>
+          Du är inloggad som {{ currentUser.get('username') }}
+          <q-btn
+            label="Logga ut"
+            to="/logout"
+            size="md"
+            class="rorstrand-button"
+            text-color="primary"
+            flat
+            no-caps
+          />
+        </div>
+        </q-item>
       </q-list>
     </q-drawer>
 
