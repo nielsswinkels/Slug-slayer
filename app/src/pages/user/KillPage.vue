@@ -88,9 +88,9 @@ export default defineComponent({
   name: 'IndexPage',
   components: {  },
   methods: {
-    saveKillCount () {
+    async saveKillCount () {
       console.log('FIXME implement save killcount')
-      const savedKillCount = parseUtil.saveKillCount(new Date(this.date), this.killCount)
+      const savedKillCount = await parseUtil.saveKillCount(new Date(this.date), this.killCount)
       if (!savedKillCount) {
         console.error('Did not save the killcount! Now what we do?!')
       }

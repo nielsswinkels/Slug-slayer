@@ -20,10 +20,28 @@
       />
     </div>
     <div>
-      <h4>Topplistan</h4>
+      <h4>Toppmördare</h4>
       <q-list>
         <q-item
           v-for="(user, index) in allUsers"
+          :key="user.id"
+        >
+          {{ index+1 }}
+          <q-icon
+            name="arrow_right"
+            size="sm"
+            v-if="user.username === currentUser.get('username')"
+          ></q-icon>
+          {{ user.username }}
+          {{ user.killCount }}
+        </q-item>
+      </q-list>
+    </div>
+    <div>
+      <h4>Teamlistan</h4>
+      <q-list>
+        <q-item
+          v-for="(user, index) in allTeams"
           :key="user.id"
         >
           {{ index+1 }}
