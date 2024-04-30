@@ -35,7 +35,10 @@
       </div>
     </div>
     <div class="col row justify-center items-center text-h1">
-      {{ killCount }}
+      <template v-if="!isSaving">
+        {{ killCount }}
+      </template>
+      <q-spinner v-if="isSaving"></q-spinner>
     </div>
     <div
       class="col-shrink row justify-evenly items-center q-my-md"
@@ -61,6 +64,7 @@
           label="Färdig"
           color="positive"
           @click="saveKillCount"
+          :disable="isSaving"
           class="q-pa-xl"
         ></q-btn>
       </div>
@@ -109,18 +113,20 @@ export default defineComponent({
   components: {  },
   methods: {
     async saveKillCount () {
-      console.log('FIXME implement save killcount')
+      this.isSaving = true
       const savedKillCount = await parseUtil.saveKillCount(new Date(this.date), this.killCount)
       if (!savedKillCount) {
         console.error('Did not save the killcount! Now what we do?!')
       }
       this.$router.push('/user')
+      this.isSaving = false
     }
   },
   setup() {
     const today = new Date()
     return {
       killCount: ref(0),
+      isSaving: ref(false),
       date: ref(today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0')+' '+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0'))
     };
   }
