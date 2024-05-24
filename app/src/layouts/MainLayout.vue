@@ -14,7 +14,11 @@
         <q-toolbar-title @click="$router.push('/user')">
           {{ appName }}
         </q-toolbar-title>
-        {{ currentUser.get('username') }}
+        <span
+        @click="toggleRightDrawer"
+        >
+          {{ currentUser.get('username') }}
+        </span>
       </q-toolbar>
     </q-header>
 
@@ -24,13 +28,31 @@
     >
       <q-list>
         <q-item
+          clickable
+          to="/user/"
         >
-          Menu
+          Översikt
         </q-item>
         <q-item
+          clickable
+          to="/user/sessions"
         >
-        <div>
+          Mina strider
+        </q-item>
+      </q-list>
+    </q-drawer>
+
+    <q-drawer
+      v-model="rightDrawerOpen"
+      bordered
+      side="right"
+    >
+      <q-list>
+        <q-item
+        >
           Du är inloggad som {{ currentUser.get('username') }}
+        </q-item>
+        <q-item>
           <q-btn
             label="Logga ut"
             to="/logout"
@@ -40,7 +62,6 @@
             flat
             no-caps
           />
-        </div>
         </q-item>
       </q-list>
     </q-drawer>
@@ -65,14 +86,19 @@ export default defineComponent({
 
   setup () {
     const leftDrawerOpen = ref(false)
+    const rightDrawerOpen = ref(false)
     const appName = process.env.APP_NAME
     const currentUser = parse.User.current()
     return {
       currentUser,
       appName,
       leftDrawerOpen,
+      rightDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
+      },
+      toggleRightDrawer () {
+        rightDrawerOpen.value = !rightDrawerOpen.value
       }
     }
   }
