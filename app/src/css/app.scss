@@ -10,3 +10,23 @@
 .debug-green {
   border: 1px solid green;
 }
+
+.input-h1 input {
+  line-height: 1.2;
+  height: 150%;
+}
+
+.input-text-center input {
+  text-align: center;
+}
+
+.no-spinners::-webkit-inner-spin-button input,
+.no-spinners::-webkit-outer-spin-button input {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-spinners input {
+  -moz-appearance: textfield;
+  /* Add styles for IE11 if needed */
+}

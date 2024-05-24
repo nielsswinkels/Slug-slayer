@@ -36,7 +36,15 @@
     </div>
     <div class="col row justify-center items-center text-h1">
       <template v-if="!isSaving">
-        {{ killCount }}
+          <q-input
+            autocomplete="off"
+            v-model.number="killCount"
+            borderless
+            type="number"
+            class="text-h1 q-pa-none input-h1 no-spinners input-text-center"
+            style="max-width: 400px; line-height: 2;"
+          >
+          </q-input>
       </template>
       <q-spinner v-if="isSaving"></q-spinner>
     </div>
@@ -114,6 +122,10 @@ export default defineComponent({
   methods: {
     async saveKillCount () {
       this.isSaving = true
+      if (this.killCount+'' === '' || this.killCount < 0) {
+        this.killCount = 0
+      }
+      this.killCount = Math.round(this.killCount)
       const savedKillCount = await parseUtil.saveKillCount(new Date(this.date), this.killCount)
       if (!savedKillCount) {
         console.error('Did not save the killcount! Now what we do?!')
