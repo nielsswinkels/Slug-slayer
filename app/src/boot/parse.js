@@ -1,8 +1,8 @@
 import { boot } from 'quasar/wrappers'
 import parse from 'parse'
+import { Award } from '../../../shared-types';
 
 export default boot(({ app }) => {
-  const parse = require('parse')
   parse.serverURL = process.env.PARSE_URL
   parse.liveQueryServerURL = 'wss://' + process.env.PARSE_BACK4APP_SUBDOMAIN
   parse.initialize(
@@ -11,6 +11,8 @@ export default boot(({ app }) => {
     process.env.PARSE_KEY
   )
   app.config.globalProperties.$parse = parse
+
+  parse.Object.registerSubclass('Award', Award);
 })
 
 export { parse }

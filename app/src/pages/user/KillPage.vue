@@ -109,11 +109,56 @@
         </div>
       </div>
     </div>
+    <q-dialog
+      v-model="showAwardDialog"
+      backdrop-filter="brightness(60%)"
+      @hide="$router.push('/user')"
+      style="width:50vw"
+      >
+      <div
+        class="row justify-between items-center q-gutter-sm q-px-md"
+      >
+
+        <q-card
+          class="col-12 text-h4 q-pa-md"
+        >
+          Utmärkelse{{ (receivedAwards.length>1?'r':'') }} upplåst!
+        </q-card>
+        <q-card
+          v-for="receivedAward in receivedAwards"
+          :key="receivedAward.awardName"
+          class="col-12"
+        >
+          <q-card-section class="row items-center q-pb-none text-h6">
+            {{ receivedAward.awardName }}
+            {{ receivedAward.dateReceived.toLocaleDateString() }}
+          </q-card-section>
+          
+          <q-card-section class="flex flex-center"> 
+            <q-avatar
+              class="flex-center"
+              size="20vw"
+              :icon="receivedAward.awardIcon"
+              :text-color="receivedAward.awardColor"
+              :color="receivedAward.awardColor2"
+            />
+            <!-- <q-icon :name="receivedAward.awardIcon" :color="receivedAward.awardColor"></q-icon> -->
+          </q-card-section>
+          <q-card-section>
+            {{ receivedAward.awardDescription }}
+          </q-card-section>
+        </q-card>
+        <div class="col-12 row">
+          <q-btn class="col-grow q-ma-md" label="Stäng" color="primary" v-close-popup />
+        </div>
+      </div>
+    </q-dialog>
   </q-page>
 </template>
 
 <script lang="ts">
 import parseUtil from 'src/js/parseUtil'
+import parse from 'parse'
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -130,8 +175,62 @@ export default defineComponent({
       if (!savedKillCount) {
         console.error('Did not save the killcount! Now what we do?!')
       }
-      this.$router.push('/user')
+      await this.checkForAwards();
+      if (this.receivedAwards.length == 0) {
+        this.$router.push('/user')
+      } else {
+        this.showAwardDialog = true
+      }
       this.isSaving = false
+    },
+    async checkForAwards () {
+      const currentUser = parse.User.current()
+      const awardIdWhiteDeath = 'iV1oG5hKuT'
+      if (!currentUser) {
+        console.warn('Cant check for awards without current user!',currentUser)
+        return
+      }
+      // check if user not already has award
+      const thisYear = new Date().getFullYear()
+      const foundAward = await parseUtil.getAwardForUser(currentUser, awardIdWhiteDeath, thisYear)
+      if (foundAward !== null) {
+        console.log('Found award', foundAward)
+        return
+      }
+      // get first date for this user and year
+      const firstSession = await parseUtil.getFirstKillForUserAndYear(currentUser, thisYear)
+      if (!firstSession) {
+        console.log('No first session found!', currentUser, thisYear)
+        return
+      }
+      // if first date is less than 105 days from now
+      if ((new Date().getTime() - firstSession.date.getTime()) / (1000 * 60 * 60 * 24) < 105) {
+        // get total
+        const killTotal = await parseUtil.getTotalKillCountForUser(currentUser, thisYear)
+        // if total >= 742
+        if (killTotal >= 742) {
+          // get award and save
+          const giveAwardResult = await parseUtil.giveAwardToUser(currentUser, awardIdWhiteDeath)
+          // show award and pause the redirect
+          if (giveAwardResult !== null) {
+            console.log('pushing received award', giveAwardResult, giveAwardResult.award)
+            console.log('pushing received award', giveAwardResult.award.name)
+            this.receivedAwards.push({
+              'dateReceived': giveAwardResult.dateReceived,
+              'year': giveAwardResult.year,
+              'awardName': giveAwardResult.award.name,
+              'awardDescription': giveAwardResult.award.description,
+              'awardIcon': giveAwardResult.award.icon,
+              'awardColor': giveAwardResult.award.color,
+              'awardColor2': giveAwardResult.award.color2,
+            })
+          }
+        } else {
+          console.log('not high enough killcount')
+        }
+      } else {
+        console.log('too many days have passed', firstSession.date.getTime())
+      }
     }
   },
   setup() {
@@ -139,7 +238,25 @@ export default defineComponent({
     return {
       killCount: ref(0),
       isSaving: ref(false),
-      date: ref(today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0')+' '+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0'))
+      date: ref(today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0')+' '+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0')),
+      receivedAwards: ref([{
+        dateReceived: new Date(),
+        year: 2024,
+        awardName: 'Amazing award',
+        awardDescription: 'Lorem ipsum derpus totalus!',
+        awardIcon: 'settings',
+        awardColor: 'cyan-4',
+        awardColor2: 'grey-9',
+      }] as {
+        dateReceived: Date;
+        year: number;
+        awardName: string;
+        awardDescription: string;
+        awardIcon: string;
+        awardColor: string;
+        awardColor2: string;
+      }[]),
+      showAwardDialog: ref(false)
     };
   }
 });

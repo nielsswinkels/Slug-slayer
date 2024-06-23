@@ -46,6 +46,32 @@
     <div
       class="q-py-xl q-my-xl"
     >
+      <div class="text-h6">Uppdateringar</div>
+      <ul>
+        <li>
+          Any day now..
+          <ul>
+            <li>En första utmärkelse är möjligt att få!</li>
+          </ul>
+        </li>
+        <li>
+          2024-05-25
+          <ul>
+            <li>Se en lista över dina strider från vänstra menyn.</li>
+          </ul>
+        </li>
+        <li>
+          2024-05-24
+          <ul>
+            <li>Nu går det att direkt skriva din kill count.</li>
+          </ul>
+        </li>
+      </ul>
+
+    </div>
+    <div
+      class="q-py-xl q-my-xl"
+    >
 
     </div>
     <q-page-sticky position="bottom-right" :offset="[30, 30]">

@@ -3,7 +3,7 @@
 import parse from 'parse'
 // import Store from 'src/store'
 // import { Store } from 'src/store/index'
-import { Session } from '../../../shared-types'
+import { Session, Award, WonAward } from '../../../shared-types'
 
 export async function signUp (email:string, username: string, password: string, termsAccepted: boolean) {
   // Create a new instance of the user class
@@ -19,11 +19,11 @@ export async function signUp (email:string, username: string, password: string, 
     return { success: true }
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return { success: false, error: error as Parse.Error };
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return { success: false, error: new Error('An unexpected error occurred') };
     }
   }
@@ -36,11 +36,11 @@ export async function resetPassword (email: string) {
     return { success: true }
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return { success: false, error: error as Parse.Error };
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return { success: false, error: new Error('An unexpected error occurred') };
     }
   }
@@ -53,11 +53,11 @@ export async function logIn (email: string, password: string) {
     return { success: true }
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return { success: false, error: error as Parse.Error };
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return { success: false, error: new Error('An unexpected error occurred') };
     }
   }
@@ -70,11 +70,11 @@ export async function logOut () {
     return { success: true }
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return { success: false, error: error as Parse.Error };
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return { success: false, error: new Error('An unexpected error occurred') };
     }
   }
@@ -151,11 +151,11 @@ export async function updateTotalKillCountForUser (userId: string, year: number)
     return sum
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return 0;
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return 0;
     }
   }
@@ -199,6 +199,7 @@ export async function updateTotalKillCountForUser (userId: string, year: number)
 
 
 export async function getTotalKillCountForUser (user: Parse.User): Promise<number> 
+export async function getTotalKillCountForUser (user: Parse.User, year?: number): Promise<number>
 export async function getTotalKillCountForUser (user: Parse.User, year?: number): Promise<number> {
   //const user = getUser(userId)
   if (!user) {
@@ -215,17 +216,73 @@ export async function getTotalKillCountForUser (user: Parse.User, year?: number)
   if (year < 100) {
     year += 1900
   }
-  const queryTotal = new parse.Query('KillTotal')
-  queryTotal.equalTo('userId', user.id)
-  queryTotal.equalTo('year', year)
-  const killTotal = await queryTotal.first()
-  let total = 0
-  if (killTotal) {
-    total = killTotal.get('total')
-  } else {
-    total = await updateTotalKillCountForUser(user.id, year)
+  try {
+    const queryTotal = new parse.Query('KillTotal')
+    queryTotal.equalTo('userId', user.id)
+    queryTotal.equalTo('year', year)
+    const killTotal = await queryTotal.first()
+    let total = 0
+    if (killTotal) {
+      total = killTotal.get('total')
+    } else {
+      total = await updateTotalKillCountForUser(user.id, year)
+    }
+    return total
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      return 0;
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred');
+      return 0;
+    }
   }
-  return total
+}
+
+export async function getFirstKillForUserAndYear (user: Parse.User, year?: number): Promise<Session | undefined> {
+  //const user = getUser(userId)
+  if (!user) {
+    console.error('No user found.')
+    return undefined
+  }
+  if (!year) {
+    const d = new Date()
+    year = d.getFullYear()
+  }
+  if (year < 50) {
+    year += 2000
+  }
+  if (year < 100) {
+    year += 1900
+  }
+  try {
+    const query = new parse.Query('KillRecord')
+    query.equalTo('user', user)
+    query.greaterThanOrEqualTo('date', new Date(year + '-01-01'))
+    query.lessThanOrEqualTo('date', new Date(year + '-12-31'))
+    query.ascending('date')
+    const result = await query.first()
+    if (!result) {
+      return undefined
+    }
+    return {
+      id: result.id,
+      user: result.get('user'),
+      date: result.get('date'),
+      createdAt: result.get('createdAt'),
+      count: result.get('count'),
+    } as Session;
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      return undefined;
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred');
+      return undefined;
+    }
+  }
 }
 
 export async function getSessionsForUser (user: Parse.User) : Promise<Session[]> {
@@ -253,11 +310,11 @@ export async function getSessionsForUser (user: Parse.User) : Promise<Session[]>
     });
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return [];
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return [];
     }
   }
@@ -272,11 +329,11 @@ export async function getAllUsers () : Promise<Parse.User[]> {
     return results.map((result) => result as Parse.User);
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return [];
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
       return [];
     }
   }
@@ -294,11 +351,116 @@ export async function getUser (userId: string) : Promise<Parse.User | null> {
     return result as Parse.User;
   } catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.log('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
       return null;
     } else {
       // Handle the case where the error is not the expected type
-      console.log('An unexpected error occurred');
+      console.error('An unexpected error occurred');
+      return null;
+    }
+  }
+}
+
+export async function getAward (awardId: string) : Promise<Award | null> {
+  const query = new parse.Query('Award')
+  query.equalTo('objectId', awardId)
+
+  try {
+    const result = await query.first()
+    if (!result) {
+      return null
+    }
+    return result as Award
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      return null;
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred');
+      return null;
+    }
+  }
+}
+
+export async function getAwardForUser (user:Parse.User, awardId:string, year:number) : Promise<WonAward | null> {
+  const award = await getAward(awardId)
+  if (!award || award == null) {
+    console.warn('No award found with that id ', awardId)
+    return null
+  }
+  console.log('getAwardForUser!', user, award, year)
+  if (award instanceof parse.Object) {
+    console.log('yes')
+  } else {
+    console.log('no')
+  }
+  const query = new parse.Query('WonAward')
+  query.equalTo('user', user)
+  // query.equalTo('award', award)
+  query.equalTo('award', { '__type': 'Pointer', 'className': 'Award', 'objectId': award.id })
+  query.equalTo('year', year)
+  query.include('award')
+
+  try {
+    const result = await query.first();
+    if (!result) {
+      return null
+    }
+    return {
+      id: result.id,
+      user: result.get('user'),
+      award: result.get('award'),
+      year: result.get('year'),
+      dateReceived: result.get('dateReceived')
+    } as WonAward;
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      return null;
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred');
+      return null;
+    }
+  }
+}
+
+export async function giveAwardToUser (user:Parse.User, awardId:string) : Promise<WonAward | null> {
+  const award = await getAward(awardId)
+  if (!award) {
+    console.warn('No award found with that id ', awardId)
+    return null
+  }
+  console.log('going to give award to user', award, user)
+  const awardRecord = new parse.Object('WonAward')
+  awardRecord.set('user', user)
+  // awardRecord.set('award', award)
+  awardRecord.set('award', { '__type': 'Pointer', 'className': 'Award', 'objectId': award.id })
+  awardRecord.set('year', new Date().getFullYear())
+  awardRecord.set('dateReceived', new Date())
+
+  try {
+    const savedAwardRecord = await awardRecord.save();
+    // Re-fetch the object with the related Award included
+    const query = new parse.Query('WonAward')
+    query.include('award')
+    const fullAwardRecord = await query.get(savedAwardRecord.id)
+
+    return {
+      id: fullAwardRecord.id,
+      user: fullAwardRecord.get('user'),
+      award: fullAwardRecord.get('award'),
+      year: fullAwardRecord.get('year'),
+      dateReceived: fullAwardRecord.get('dateReceived')
+    } as WonAward;
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      return null;
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred');
       return null;
     }
   }
@@ -311,7 +473,11 @@ export default {
   logOut,
   saveKillCount,
   getTotalKillCountForUser,
+  getFirstKillForUserAndYear,
   getSessionsForUser,
   getAllUsers,
-  getUser
+  getUser,
+  getAward,
+  getAwardForUser,
+  giveAwardToUser
 }
