@@ -204,7 +204,7 @@ export default defineComponent({
         return
       }
       // if first date is less than 105 days from now
-      if ((new Date().getTime() - firstSession.date.getTime()) / (1000 * 60 * 60 * 24) < 105) {
+      if ((new Date().getTime() - firstSession.date.getTime()) / (1000 * 60 * 60 * 24) <= 105) {
         // get total
         const killTotal = await parseUtil.getTotalKillCountForUser(currentUser, thisYear)
         // if total >= 742
@@ -239,15 +239,7 @@ export default defineComponent({
       killCount: ref(0),
       isSaving: ref(false),
       date: ref(today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0')+' '+today.getHours().toString().padStart(2, '0')+':'+today.getMinutes().toString().padStart(2, '0')),
-      receivedAwards: ref([{
-        dateReceived: new Date(),
-        year: 2024,
-        awardName: 'Amazing award',
-        awardDescription: 'Lorem ipsum derpus totalus!',
-        awardIcon: 'settings',
-        awardColor: 'cyan-4',
-        awardColor2: 'grey-9',
-      }] as {
+      receivedAwards: ref([] as {
         dateReceived: Date;
         year: number;
         awardName: string;

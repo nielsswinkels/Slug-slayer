@@ -426,6 +426,35 @@ export async function getAwardForUser (user:Parse.User, awardId:string, year:num
   }
 }
 
+export async function getAwardsForUser (user:Parse.User) : Promise<WonAward[]> {
+  const query = new parse.Query('WonAward')
+  query.equalTo('user', user)
+  query.include('award')
+  query.descending('dateReceived')
+
+  try {
+    const results = await query.find();
+    return results.map((result) => {
+      return {
+        id: result.id,
+        user: result.get('user'),
+        award: result.get('award'),
+        year: result.get('year'),
+        dateReceived: result.get('dateReceived')
+      } as WonAward;
+    })
+  } catch (error: unknown) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + (error as Parse.Error).code + ' ' + (error as Parse.Error).message);
+      return [];
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred');
+      return [];
+    }
+  }
+}
+
 export async function giveAwardToUser (user:Parse.User, awardId:string) : Promise<WonAward | null> {
   const award = await getAward(awardId)
   if (!award) {
@@ -479,5 +508,6 @@ export default {
   getUser,
   getAward,
   getAwardForUser,
+  getAwardsForUser,
   giveAwardToUser
 }

@@ -39,6 +39,12 @@
         >
           Mina strider
         </q-item>
+        <q-item
+          clickable
+          to="/user/awards"
+        >
+          Utmärkelser
+        </q-item>
       </q-list>
     </q-drawer>
 

@@ -49,7 +49,7 @@
       <div class="text-h6">Uppdateringar</div>
       <ul>
         <li>
-          Any day now..
+          2024-06-23
           <ul>
             <li>En första utmärkelse är möjligt att få!</li>
           </ul>
