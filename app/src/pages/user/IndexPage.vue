@@ -5,7 +5,7 @@
     </div>
     <div class="text-h1 q-mb-lg">
       <q-spinner v-if="!personalTotal"></q-spinner>
-      {{ (this.personalTotal?this.personalTotal:'') }}
+      {{ (personalTotal?personalTotal:'') }}
     </div>
     <div>
       <h4>Toppmördare</h4>
@@ -14,11 +14,11 @@
           v-for="(user, index) in allUsers"
           :key="user.id"
         >
-          {{ index+1 }}
+          {{ index+1 }}.
           <q-icon
             name="arrow_right"
             size="sm"
-            v-if="user.username === currentUser.get('username')"
+            v-if="currentUser && user.username === currentUser.get('username')"
           ></q-icon>
           {{ user.username }}
           {{ user.killCount }}
@@ -26,20 +26,21 @@
       </q-list>
     </div>
     <div>
-      <h4>Teamlistan</h4>
+      <h4>Laglistan</h4>
+      currentTeam: {{ currentTeam }}
       <q-list>
         <q-item
-          v-for="(user, index) in allTeams"
-          :key="user.id"
+          v-for="(team, index) in allTeams"
+          :key="team.id"
         >
-          {{ index+1 }}
+          {{ index+1 }}.
           <q-icon
             name="arrow_right"
             size="sm"
-            v-if="user.username === currentUser.get('username')"
+            v-if="currentTeam && team.name === currentTeam.get('name')"
           ></q-icon>
-          {{ user.username }}
-          {{ user.killCount }}
+          {{ team.name }}
+          {{ team.killCount }}
         </q-item>
       </q-list>
     </div>
@@ -79,7 +80,7 @@
         label="Dags att mörda"
         icon="content_cut"
         rounded
-        color="primary"
+        color="accent"
         size="xl"
         class="q-pa-lg"
         to="/user/kill"
@@ -99,10 +100,14 @@ export default defineComponent({
   setup() {
     let personalTotal: Ref<null | number> = ref(null)
     let allUsers: Ref<Array<{id:string, username:string, killCount:number}>> = ref([])
+    let allTeams: Ref<Array<{id:string, name:string, killCount:number}>> = ref([])
+    let currentTeam: Ref<parse.Object | undefined> = ref(undefined)
 
     return {
       personalTotal,
       allUsers,
+      allTeams,
+      currentTeam,
       currentUser: ref(parse.User.current())
     };
   },
@@ -112,8 +117,8 @@ export default defineComponent({
     }
     const loadedUsers = await parseUtil.getAllUsers()
     for (const user of loadedUsers) {
-      console.log(user)
-      console.log(user.get('username'))
+      // console.log(user)
+      // console.log(user.get('username'))
 
       let killCount = await parseUtil.getTotalKillCountForUser(user)
       
@@ -124,6 +129,19 @@ export default defineComponent({
       })
     }
     this.allUsers.sort((a,b) => b.killCount - a.killCount)
+
+    this.currentTeam = await parseUtil.getTeamForUser(this.currentUser)
+    const loadedTeams = await parseUtil.getAllTeams()
+    for (const team of loadedTeams) {
+      let killCount = await parseUtil.getTotalKillCountForTeam(team)
+      
+      this.allTeams.push({
+        'id':team.id,
+        'name':team.get('name'),
+        'killCount': killCount,
+      })
+    }
+    this.allTeams.sort((a,b) => b.killCount - a.killCount)
   }
 });
 </script>

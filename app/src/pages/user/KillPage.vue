@@ -206,7 +206,7 @@ export default defineComponent({
       // if first date is less than 105 days from now
       if ((new Date().getTime() - firstSession.date.getTime()) / (1000 * 60 * 60 * 24) <= 105) {
         // get total
-        const killTotal = await parseUtil.getTotalKillCountForUser(currentUser, thisYear)
+        const killTotal = await parseUtil.getTotalKillCountForUserAndYear(currentUser, thisYear)
         // if total >= 742
         if (killTotal >= 742) {
           // get award and save

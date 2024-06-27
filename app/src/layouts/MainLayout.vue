@@ -41,6 +41,12 @@
         </q-item>
         <q-item
           clickable
+          to="/user/teams"
+        >
+          Mitt lag
+        </q-item>
+        <q-item
+          clickable
           to="/user/awards"
         >
           Utmärkelser
