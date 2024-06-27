@@ -3,6 +3,7 @@
     <template v-if="currentTeam">
       <div>
         <h4>Mitt lag</h4>
+        <h5>{{ currentTeam.get('name') }}</h5>
         <q-list>
           <q-item
             v-for="(member, index) in teamMembers"

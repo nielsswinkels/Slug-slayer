@@ -530,7 +530,7 @@ export async function joinTeam (team, user, isCaptain) {
     console.error('No team found to save teamMemberRecord.')
     return null  
   }
-  const currentTeam = await parseUtil.getTeamForUser(user)
+  const currentTeam = await getTeamForUser(user)
   if (currentTeam) {
     console.error('User is already in a team.')
     return null
