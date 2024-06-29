@@ -1,11 +1,10 @@
 <template>
-  <q-page class="column" >
-    <div class="col row justify-center items-center content-center">
-      <h1 class="col-md-6 col-xs-11">
+  <q-page >
+    <div class="column items-center justify-center no-wrap">
+      <h1 class="text-center debug-red">
         Registrera konto
       </h1>
-      <div class="flex-break"></div>
-      <div class="col-md-6 col-xs-11 column items-start q-gutter-md no-wrap">
+      <div class="column items-start q-gutter-md no-wrap">
         <q-input
           ref="emailRef"
           class="col"
