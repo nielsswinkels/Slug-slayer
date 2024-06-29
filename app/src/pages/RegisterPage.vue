@@ -1,7 +1,7 @@
 <template>
   <q-page >
     <div class="column items-center justify-center no-wrap">
-      <h1 class="text-center debug-red">
+      <h1 class="text-center">
         Registrera konto
       </h1>
       <div class="column items-start q-gutter-md no-wrap">
