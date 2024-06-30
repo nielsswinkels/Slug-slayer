@@ -184,6 +184,10 @@ export default defineComponent({
       this.isSaving = false
     },
     async checkForAwards () {
+      await this.checkForWhiteDeathAward()
+      await this.checkForSlayerAward()
+    },
+    async checkForWhiteDeathAward () {
       const currentUser = parse.User.current()
       const awardIdWhiteDeath = 'iV1oG5hKuT'
       if (!currentUser) {
@@ -230,6 +234,41 @@ export default defineComponent({
         }
       } else {
         console.log('too many days have passed', firstSession.date.getTime())
+      }
+    },
+    async checkForSlayerAward () {
+      const currentUser = parse.User.current()
+      const awardIdSlayer = 'ZG92B2UR0T'
+      if (!currentUser) {
+        console.warn('Cant check for awards without current user!',currentUser)
+        return
+      }
+      // check if user not already has award
+      const thisYear = new Date().getFullYear()
+      const foundAward = await parseUtil.getAwardForUser(currentUser, awardIdSlayer, thisYear)
+      if (foundAward !== null) {
+        console.log('Found award', foundAward)
+        return
+      }
+      
+      const killTotal = await parseUtil.getTotalKillCountForUserAndYear(currentUser, thisYear)
+      if (killTotal >= 666) {
+        const giveAwardResult = await parseUtil.giveAwardToUser(currentUser, awardIdSlayer)
+        if (giveAwardResult !== null) {
+          console.log('pushing received award', giveAwardResult, giveAwardResult.award)
+          console.log('pushing received award', giveAwardResult.award.name)
+          this.receivedAwards.push({
+            'dateReceived': giveAwardResult.dateReceived,
+            'year': giveAwardResult.year,
+            'awardName': giveAwardResult.award.name,
+            'awardDescription': giveAwardResult.award.description,
+            'awardIcon': giveAwardResult.award.icon,
+            'awardColor': giveAwardResult.award.color,
+            'awardColor2': giveAwardResult.award.color2,
+          })
+        }
+      } else {
+        console.log('not high enough killcount')
       }
     }
   },

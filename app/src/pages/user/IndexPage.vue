@@ -52,6 +52,7 @@
           2024-06-30
           <ul>
             <li>Nu kan vi skapa olika lag och gå med i dom. (Säg till om ni hittar buggar!)</li>
+            <li>En till utmärkelse!</li>
           </ul>
         </li>
         <li>
