@@ -49,6 +49,12 @@
       <div class="text-h6">Uppdateringar</div>
       <ul>
         <li>
+          2024-06-30
+          <ul>
+            <li>Nu kan vi skapa olika lag och gå med i dom. (Säg till om ni hittar buggar!)</li>
+          </ul>
+        </li>
+        <li>
           2024-06-23
           <ul>
             <li>En första utmärkelse är möjligt att få!</li>
