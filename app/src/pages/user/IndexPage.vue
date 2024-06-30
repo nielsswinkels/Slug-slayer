@@ -27,7 +27,6 @@
     </div>
     <div>
       <h4>Laglistan</h4>
-      currentTeam: {{ currentTeam }}
       <q-list>
         <q-item
           v-for="(team, index) in allTeams"
@@ -130,7 +129,8 @@ export default defineComponent({
     }
     this.allUsers.sort((a,b) => b.killCount - a.killCount)
 
-    this.currentTeam = await parseUtil.getTeamForUser(this.currentUser)
+    const teamMembership = await parseUtil.getTeamMembershipForUser(this.currentUser)
+    this.currentTeam = teamMembership?.get('team')
     const loadedTeams = await parseUtil.getAllTeams()
     for (const team of loadedTeams) {
       let killCount = await parseUtil.getTotalKillCountForTeam(team)

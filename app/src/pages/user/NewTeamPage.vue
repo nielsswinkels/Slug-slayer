@@ -51,7 +51,7 @@ export default defineComponent({
     async saveNewTeam () {
       this.isSaving = true
       this.teamName = this.teamName.trim()
-      const existingTeam = await parseUtil.getTeam(this.teamName)
+      const existingTeam = await parseUtil.getTeamByName(this.teamName)
       if (existingTeam !== null) {
         console.warn('Team name is already in use.')
         // TODO show some kind of error
@@ -59,8 +59,8 @@ export default defineComponent({
         return
       }
       const currentUser = parse.User.current()
-      const currentTeam = await parseUtil.getTeamForUser(currentUser)
-      if (currentTeam) {
+      const currentTeamMembership = await parseUtil.getTeamMembershipForUser(currentUser)
+      if (currentTeamMembership) {
         console.error('User is already in a team.')
         // TODO show some kind of error
         this.isSaving = false
@@ -79,7 +79,7 @@ export default defineComponent({
         this.isSaving = false
         return
       }
-      const savedTeamMember = await parseUtil.joinTeam(savedTeam, currentUser, true)
+      const savedTeamMember = await parseUtil.joinTeam(savedTeam, currentUser, true, true)
       if (!savedTeamMember) {
         console.error('Could not join the new team! Now what we do?!')
         // TODO show some kind of error

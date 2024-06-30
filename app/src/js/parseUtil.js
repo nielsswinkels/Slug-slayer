@@ -18,12 +18,12 @@ export async function signUp (email, username, password, termsAccepted) {
     return { success: true }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return { success: false, error };
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return { success: false, error }
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return { success: false, error: new Error('An unexpected error occurred') };
+      console.error('An unexpected error occurred')
+      return { success: false, error: new Error('An unexpected error occurred') }
     }
   }
 }
@@ -35,12 +35,12 @@ export async function resetPassword (email) {
     return { success: true }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return { success: false, error };
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return { success: false, error }
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return { success: false, error: new Error('An unexpected error occurred') };
+      console.error('An unexpected error occurred')
+      return { success: false, error: new Error('An unexpected error occurred') }
     }
   }
 }
@@ -52,12 +52,12 @@ export async function logIn (email, password) {
     return { success: true }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return { success: false, error };
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return { success: false, error }
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return { success: false, error: new Error('An unexpected error occurred') };
+      console.error('An unexpected error occurred')
+      return { success: false, error: new Error('An unexpected error occurred') }
     }
   }
 }
@@ -69,12 +69,12 @@ export async function logOut () {
     return { success: true }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return { success: false, error };
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return { success: false, error }
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return { success: false, error: new Error('An unexpected error occurred') };
+      console.error('An unexpected error occurred')
+      return { success: false, error: new Error('An unexpected error occurred') }
     }
   }
 }
@@ -128,10 +128,10 @@ export async function updateTotalKillCountForUser (userId, year) {
 
   try {
     const results = await query.find()
-    let sum = 0;
+    let sum = 0
     for (let i = 0; i < results.length; i++) {
-        const object = results[i];
-        sum += object.get('count');
+        const object = results[i]
+        sum += object.get('count')
     }
 
     const queryTotal = new parse.Query('KillTotal')
@@ -149,12 +149,12 @@ export async function updateTotalKillCountForUser (userId, year) {
     return sum
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return 0;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return 0
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return 0;
+      console.error('An unexpected error occurred')
+      return 0
     }
   }
 }
@@ -179,10 +179,10 @@ export async function updateTotalKillCountForUser (userId, year) {
 
 //   try {
 //     const results = await query.find()
-//     let sum = 0;
+//     let sum = 0
 //     for (let i = 0; i < results.length; i++) {
-//         let object = results[i];
-//         sum += object.get('count');
+//         let object = results[i]
+//         sum += object.get('count')
 //     }
 //     let totalKillsPerYear = user.get('totalKillsPerYear')
 //     totalKillsPerYear[year] = sum
@@ -231,12 +231,12 @@ export async function getTotalKillCountForUserAndYear (user, year) {
     return total
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return 0;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return 0
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return 0;
+      console.error('An unexpected error occurred')
+      return 0
     }
   }
 }
@@ -274,15 +274,15 @@ export async function getFirstKillForUserAndYear (user, year) {
       date: result.get('date'),
       createdAt: result.get('createdAt'),
       count: result.get('count'),
-    };
+    }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return undefined;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return undefined
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return undefined;
+      console.error('An unexpected error occurred')
+      return undefined
     }
   }
 }
@@ -299,7 +299,7 @@ export async function getSessionsForUser (user) {
   query.descending('date')
 
   try {
-    const results = await query.find();
+    const results = await query.find()
     return results.map((result) => {
       return {
         id: result.id,
@@ -307,16 +307,16 @@ export async function getSessionsForUser (user) {
         date: result.get('date'),
         createdAt: result.get('createdAt'),
         count: result.get('count'),
-      };
-    });
+      }
+    })
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return [];
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return []
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return [];
+      console.error('An unexpected error occurred')
+      return []
     }
   }
 }
@@ -326,15 +326,15 @@ export async function getAllUsers () {
   query.limit(1000)
 
   try {
-    return await query.find();
+    return await query.find()
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return [];
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return []
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return [];
+      console.error('An unexpected error occurred')
+      return []
     }
   }
 }
@@ -344,19 +344,19 @@ export async function getUser (userId) {
   query.equalTo('objectId', userId)
 
   try {
-    const result = await query.first();
+    const result = await query.first()
     if (!result) {
       return null
     }
-    return result;
+    return result
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return null;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return null;
+      console.error('An unexpected error occurred')
+      return null
     }
   }
 }
@@ -373,12 +373,12 @@ export async function getAward (awardId) {
     return result
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return null;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return null;
+      console.error('An unexpected error occurred')
+      return null
     }
   }
 }
@@ -403,7 +403,7 @@ export async function getAwardForUser (user, awardId, year) {
   query.include('award')
 
   try {
-    const result = await query.first();
+    const result = await query.first()
     if (!result) {
       return null
     }
@@ -413,15 +413,15 @@ export async function getAwardForUser (user, awardId, year) {
       award: result.get('award'),
       year: result.get('year'),
       dateReceived: result.get('dateReceived')
-    };
+    }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return null;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return null;
+      console.error('An unexpected error occurred')
+      return null
     }
   }
 }
@@ -433,7 +433,7 @@ export async function getAwardsForUser (user) {
   query.descending('dateReceived')
 
   try {
-    const results = await query.find();
+    const results = await query.find()
     return results.map((result) => {
       return {
         id: result.id,
@@ -441,16 +441,16 @@ export async function getAwardsForUser (user) {
         award: result.get('award'),
         year: result.get('year'),
         dateReceived: result.get('dateReceived')
-      };
+      }
     })
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return [];
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return []
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return [];
+      console.error('An unexpected error occurred')
+      return []
     }
   }
 }
@@ -470,7 +470,7 @@ export async function giveAwardToUser (user, awardId)  {
   awardRecord.set('dateReceived', new Date())
 
   try {
-    const savedAwardRecord = await awardRecord.save();
+    const savedAwardRecord = await awardRecord.save()
     // Re-fetch the object with the related Award included
     const query = new parse.Query('WonAward')
     query.include('award')
@@ -482,15 +482,15 @@ export async function giveAwardToUser (user, awardId)  {
       award: fullAwardRecord.get('award'),
       year: fullAwardRecord.get('year'),
       dateReceived: fullAwardRecord.get('dateReceived')
-    };
+    }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return null;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return null;
+      console.error('An unexpected error occurred')
+      return null
     }
   }
 }
@@ -503,7 +503,7 @@ export async function createTeam (teamName) {
     return null  
   }
   // check if name already in use
-  const existingTeam = await getTeam(teamName)
+  const existingTeam = await getTeamByName(teamName)
   if (existingTeam !== null) {
     console.warn('Team name is already in use.')
     return null
@@ -515,12 +515,18 @@ export async function createTeam (teamName) {
     console.log('TeamRecord has been saved.', savedTeamRecord)
     return savedTeamRecord
   } catch (error) {
-    console.error('Error while saving teamRecord: ', error)
-    return null
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred')
+      return null
+    }
   }
 }
 
-export async function joinTeam (team, user, isCaptain) {
+export async function joinTeam (team, user, isCaptain, isAccepted) {
   const teamMemberRecord = new parse.Object('TeamMember')
   if (!user) {
     console.error('No user found to save teamMemberRecord.')
@@ -530,7 +536,8 @@ export async function joinTeam (team, user, isCaptain) {
     console.error('No team found to save teamMemberRecord.')
     return null  
   }
-  const currentTeam = await getTeamForUser(user)
+  const currentMembership = await getTeamMembershipForUser(user)
+  const currentTeam = currentMembership?.get('team')
   if (currentTeam) {
     console.error('User is already in a team.')
     return null
@@ -538,7 +545,7 @@ export async function joinTeam (team, user, isCaptain) {
   teamMemberRecord.set('team', team)
   teamMemberRecord.set('user', user)
   teamMemberRecord.set('isCaptain', isCaptain)
-  teamMemberRecord.set('isAccepted', true)
+  teamMemberRecord.set('isAccepted', isAccepted)
   teamMemberRecord.set('joinDate', new Date())
   
   try {
@@ -546,8 +553,95 @@ export async function joinTeam (team, user, isCaptain) {
     console.log('TeamMemberRecord has been saved.', savedTeamMemberRecord)
     return savedTeamMemberRecord
   } catch (error) {
-    console.error('Error while saving teamMemberRecord: ', error)
-    return null
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred')
+      return null
+    }
+  }
+}
+
+export async function acceptJoinTeam (team, user) {
+  await reactJoinTeam(team, user, true)
+}
+
+export async function rejectJoinTeam (team, user) {
+  await reactJoinTeam(team, user, false)
+}
+
+export async function reactJoinTeam (team, user, isAccepted) {
+  if (!user) {
+    console.error('No user found to update membership.')
+    return null  
+  }
+  if (!team) {
+    console.error('No team found to update membership.')
+    return null  
+  }
+  const teamMemberQuery = new parse.Query('TeamMember')
+  teamMemberQuery.equalTo('team', team)
+  teamMemberQuery.equalTo('user', user)
+  
+  try {
+    const teamMemberRecord = await teamMemberQuery.first()
+    if (teamMemberRecord) {
+      if (isAccepted) {
+        teamMemberRecord.set('isAccepted', true)
+        teamMemberRecord.set('isDenied', false)
+      } else {
+        teamMemberRecord.set('isAccepted', false)
+        teamMemberRecord.set('isDenied', true)
+      }
+      teamMemberRecord.save()
+      console.log('Membership has been updated.')
+    } else {
+      console.warn('No team membership found to update.', team, user)
+    }
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred')
+      return null
+    }
+  }
+}
+
+export async function leaveTeam (team, user) {
+  if (!user) {
+    console.error('No user found to leave the team.')
+    return null  
+  }
+  if (!team) {
+    console.error('No team found to leave the team.')
+    return null  
+  }
+  const teamMemberQuery = new parse.Query('TeamMember')
+  teamMemberQuery.equalTo('team', team)
+  teamMemberQuery.equalTo('user', user)
+  
+  try {
+    const teamMemberRecord = await teamMemberQuery.first()
+    if (teamMemberRecord) {
+      await teamMemberRecord.destroy()
+      console.log('Membership has been removed.')
+    } else {
+      console.warn('No team membership found to delete.', team, user)
+    }
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred')
+      return null
+    }
   }
 }
 
@@ -556,58 +650,85 @@ export async function getAllTeams () {
   query.limit(1000)
 
   try {
-    const results = await query.find();
+    const results = await query.find()
     return results
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return [];
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return []
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return [];
+      console.error('An unexpected error occurred')
+      return []
     }
   }
 }
 
-export async function getTeam (teamName) {
+export async function getTeamByName (teamName) {
   const query = new parse.Query('Team')
   query.equalTo('name', teamName)
 
   try {
-    const result = await query.first();
+    const result = await query.first()
     if (!result) {
       return null
     }
     return result
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return null;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return null;
+      console.error('An unexpected error occurred')
+      return null
     }
   }
 }
 
-export async function getTeamForUser (user) {
+export async function getTeamById (teamId) {
+  const query = new parse.Query('Team')
+  query.equalTo('objectId', teamId)
+
+  try {
+    const result = await query.first()
+    if (!result) {
+      return null
+    }
+    return result
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return null
+    } else {
+      // Handle the case where the error is not the expected type
+      console.error('An unexpected error occurred')
+      return null
+    }
+  }
+}
+
+export async function getTeamMembershipForUser (user) {
   const query = new parse.Query('TeamMember')
   query.equalTo('user', user)
+  // query.equalTo('user', { '__type': 'Pointer', 'className': '_User', 'objectId': user.id })
   query.include('team')
 
   try {
-    let result = await query.first();
-    return result.get('team')
+    return await query.first()
+    // if (result) {
+    //   return result.get('team')
+    // } else {
+    //   return undefined
+    // }
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return undefined;
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return undefined
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return undefined;
+      console.error('An unexpected error occurred')
+      return undefined
     }
   }
 }
@@ -619,15 +740,15 @@ export async function getTeamMembers (team) {
   query.include('user')
 
   try {
-    return await query.find();
+    return await query.find()
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'code' in error && 'message' in error) {
-      console.error('Error: ' + error.code + ' ' + error.message);
-      return [];
+      console.error('Error: ' + error.code + ' ' + error.message)
+      return []
     } else {
       // Handle the case where the error is not the expected type
-      console.error('An unexpected error occurred');
-      return [];
+      console.error('An unexpected error occurred')
+      return []
     }
   }
 }
@@ -641,9 +762,11 @@ export async function getTotalKillCountForTeam (team) {
   const teamMembers = await getTeamMembers(team)
   for (const memberKey in teamMembers) {
     if (Object.hasOwnProperty.call(teamMembers, memberKey)) {
-      const member = teamMembers[memberKey];
-      const memberTotal = await getTotalKillCountForUser(member.get('user'))
-      total += memberTotal
+      const member = teamMembers[memberKey]
+      if (member.get('isAccepted')) {
+        const memberTotal = await getTotalKillCountForUser(member.get('user'))
+        total += memberTotal
+      }
     }
   }
   return total
@@ -667,9 +790,13 @@ export default {
   giveAwardToUser,
   createTeam,
   joinTeam,
+  acceptJoinTeam,
+  rejectJoinTeam,
+  leaveTeam,
   getAllTeams,
-  getTeam,
-  getTeamForUser,
+  getTeamByName,
+  getTeamById,
+  getTeamMembershipForUser,
   getTeamMembers,
   getTotalKillCountForTeam
 }
